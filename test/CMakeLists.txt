@@ -19,3 +19,7 @@ target_include_directories(stl_compatibility PRIVATE ${CMAKE_CURRENT_LIST_DIR} $
 target_compile_definitions(stl_compatibility PRIVATE CATCH_CONFIG_NO_POSIX_SIGNALS)
 target_link_libraries(stl_compatibility PRIVATE Catch2::Catch2WithMain)
 add_test(test_stl_compatibility stl_compatibility)
+
+add_executable(serialize serialize.cpp)
+target_include_directories(serialize PRIVATE ${CMAKE_CURRENT_LIST_DIR} ${CMAKE_CURRENT_LIST_DIR}/../include)
+add_test(test_serialize serialize)
