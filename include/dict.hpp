@@ -1,5 +1,5 @@
-#ifndef DICT_H
-#define DICT_H
+#ifndef CPPDICT_DICT_HPP
+#define CPPDICT_DICT_HPP
 
 #include <algorithm>
 #include <array>
@@ -80,8 +80,8 @@ namespace // Visitor details
                     std::visit(
                         [key, lambdas...](auto&& value) {
                             using T = std::decay_t<decltype(value)>;
-                            if constexpr (NodeT::template is_value_v<
-                                              T> or !is_values_only_v<visit_policy_t>)
+                            if constexpr (NodeT::template is_value_v<T>
+                                          or !is_values_only_v<visit_policy_t>)
                                 make_visitor(lambdas...)(key, value);
                         },
                         child_node->data);
@@ -410,4 +410,5 @@ T get_value(Dict<Types...> const& dict, std::string const& path, T const default
 
 
 } // namespace cppdict
-#endif
+
+#endif // CPPDICT_DICT_HPP
