@@ -19,3 +19,13 @@ target_include_directories(stl_compatibility PRIVATE ${CMAKE_CURRENT_LIST_DIR} $
 target_compile_definitions(stl_compatibility PRIVATE CATCH_CONFIG_NO_POSIX_SIGNALS)
 target_link_libraries(stl_compatibility PRIVATE Catch2::Catch2WithMain)
 add_test(test_stl_compatibility stl_compatibility)
+
+# opt-in: dict/cbor.hpp needs nlohmann_json
+find_package(nlohmann_json 3 QUIET)
+if (nlohmann_json_FOUND)
+  add_executable(cbor cbor.cpp)
+  target_include_directories(cbor PRIVATE ${CMAKE_CURRENT_LIST_DIR} ${CMAKE_CURRENT_LIST_DIR}/../include)
+  target_compile_definitions(cbor PRIVATE CATCH_CONFIG_NO_POSIX_SIGNALS)
+  target_link_libraries(cbor PRIVATE Catch2::Catch2WithMain nlohmann_json::nlohmann_json)
+  add_test(test_cbor cbor)
+endif ()

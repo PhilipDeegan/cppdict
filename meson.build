@@ -10,6 +10,7 @@ cppdict_dep = declare_dependency(include_directories: include_directories('inclu
 catch_dep = dependency('catch2-with-main', version:'>3.0.0', required : true)
 
 install_headers(['./include/dict.hpp'], subdir : 'cppdict')
+install_headers(['./include/dict/cbor.hpp'], subdir : 'cppdict/dict')
 
 foreach test:['basic_dict_ops','stl_compatibility']
     exe = executable(test,'test/'+test+'.cpp',
@@ -20,6 +21,17 @@ foreach test:['basic_dict_ops','stl_compatibility']
                     )
     test(test, exe)
 endforeach
+
+# opt-in: dict/cbor.hpp needs nlohmann_json, only its test depends on it
+nlohmann_json_dep = dependency('nlohmann_json', required : false, allow_fallback : true)
+if nlohmann_json_dep.found()
+    cbor_exe = executable('cbor','test/cbor.cpp',
+                    dependencies:[cppdict_dep, catch_dep, nlohmann_json_dep],
+                    cpp_args : '-DCATCH_CONFIG_NO_POSIX_SIGNALS',
+                    install: false
+                    )
+    test('cbor', cbor_exe)
+endif
 
 demo1 = executable('demo1','examples/demo1.cpp',
                 dependencies:[cppdict_dep],
